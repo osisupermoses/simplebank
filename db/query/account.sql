@@ -30,7 +30,7 @@ RETURNING *;
 
 -- name: AddAccountBalance :one
 UPDATE accounts
-  set balance = balance + sqlc.arg(amount) -- explicitly specifiy the argument name to be included in the generated struct using `sqlc.arg()`
+  set balance = balance + sqlc.arg(amount)
 WHERE id = sqlc.arg(id)
 RETURNING *;
 
