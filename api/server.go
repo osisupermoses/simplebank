@@ -11,7 +11,7 @@ import (
 	"github.com/osisupermoses/simplebank/util"
 )
 
-// Server serves HTTP request for our banking service.
+// Server serves HTTP requests for our banking service.
 type Server struct {
 	config util.Config
 	store  db.Store

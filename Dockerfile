@@ -8,20 +8,20 @@ WORKDIR /app
 COPY . .
 # build to a single binary executable file. `o` stands for `output`, `main` here is the name of the output binary file, and finally passing the main entry point of our app (main.go)
 RUN go build -o main main.go
-# install curl
-RUN apk add curl
-# download and extract golang-migrate binary
-RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.1/migrate.linux-amd64.tar.gz | tar xvz
+# # install curl
+# RUN apk add curl
+# # download and extract golang-migrate binary
+# RUN curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.1/migrate.linux-amd64.tar.gz | tar xvz
 
 # --- Run stage ---
 FROM alpine:3.20
 WORKDIR /app
 COPY --from=builder /app/main .
-COPY --from=builder /app/migrate ./migrate
+# COPY --from=builder /app/migrate ./migrate
 COPY app.env .
 COPY start.sh .
 COPY wait-for.sh .
-COPY db/migration ./migration
+COPY db/migration ./db/migration
 
 # informs docker that the container listens on a specified network port at runtime
 # please note that this doesn't publish the port, it only functions as a documentation.
