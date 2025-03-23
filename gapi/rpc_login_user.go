@@ -47,7 +47,7 @@ func (server *Server) LoginUser(ctx context.Context, req *pb.LoginUserRequest) (
 	}
 
 	mtdt := server.extractMetadata(ctx)
-	session, err := server.store.CreateSeesion(ctx, db.CreateSeesionParams{
+	session, err := server.store.CreateSession(ctx, db.CreateSessionParams{
 		ID:           refreshPayload.ID,
 		Username:     user.Username,
 		RefreshToken: refreshToken,
@@ -57,7 +57,7 @@ func (server *Server) LoginUser(ctx context.Context, req *pb.LoginUserRequest) (
 		ExpiresAt:    refreshPayload.ExpiredAt,
 	})
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to create session:", err)
+		return nil, status.Errorf(codes.Internal, "failed to create session: %s", err)
 	}
 
 	resp := &pb.LoginUserResponse{

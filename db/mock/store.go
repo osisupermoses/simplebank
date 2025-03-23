@@ -87,19 +87,19 @@ func (mr *MockStoreMockRecorder) CreateEntry(ctx, arg any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateEntry", reflect.TypeOf((*MockStore)(nil).CreateEntry), ctx, arg)
 }
 
-// CreateSeesion mocks base method.
-func (m *MockStore) CreateSeesion(ctx context.Context, arg db.CreateSeesionParams) (db.Session, error) {
+// CreateSession mocks base method.
+func (m *MockStore) CreateSession(ctx context.Context, arg db.CreateSessionParams) (db.Session, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateSeesion", ctx, arg)
+	ret := m.ctrl.Call(m, "CreateSession", ctx, arg)
 	ret0, _ := ret[0].(db.Session)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// CreateSeesion indicates an expected call of CreateSeesion.
-func (mr *MockStoreMockRecorder) CreateSeesion(ctx, arg any) *gomock.Call {
+// CreateSession indicates an expected call of CreateSession.
+func (mr *MockStoreMockRecorder) CreateSession(ctx, arg any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSeesion", reflect.TypeOf((*MockStore)(nil).CreateSeesion), ctx, arg)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateSession", reflect.TypeOf((*MockStore)(nil).CreateSession), ctx, arg)
 }
 
 // CreateTransfer mocks base method.
@@ -369,4 +369,19 @@ func (m *MockStore) UpdateVerifyEmail(ctx context.Context, arg db.UpdateVerifyEm
 func (mr *MockStoreMockRecorder) UpdateVerifyEmail(ctx, arg any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateVerifyEmail", reflect.TypeOf((*MockStore)(nil).UpdateVerifyEmail), ctx, arg)
+}
+
+// VerifyEmailTx mocks base method.
+func (m *MockStore) VerifyEmailTx(ctx context.Context, arg db.VerifyEmailTxParams) (db.VerifyEmailTxResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "VerifyEmailTx", ctx, arg)
+	ret0, _ := ret[0].(db.VerifyEmailTxResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// VerifyEmailTx indicates an expected call of VerifyEmailTx.
+func (mr *MockStoreMockRecorder) VerifyEmailTx(ctx, arg any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VerifyEmailTx", reflect.TypeOf((*MockStore)(nil).VerifyEmailTx), ctx, arg)
 }

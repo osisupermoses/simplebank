@@ -123,7 +123,7 @@ func (server *Server) loginUser(ctx *gin.Context) {
 		return
 	}
 
-	session, err := server.store.CreateSeesion(ctx, db.CreateSeesionParams{
+	session, err := server.store.CreateSession(ctx, db.CreateSessionParams{
 		ID:           refreshPayload.ID,
 		Username:     user.Username,
 		RefreshToken: refreshToken,

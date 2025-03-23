@@ -12,7 +12,7 @@ import (
 	"github.com/google/uuid"
 )
 
-const createSeesion = `-- name: CreateSeesion :one
+const createSession = `-- name: CreateSession :one
 INSERT INTO sessions (
     id,
     username,
@@ -26,7 +26,7 @@ INSERT INTO sessions (
 ) RETURNING id, username, refresh_token, user_agent, client_ip, is_blocked, expires_at, created_at
 `
 
-type CreateSeesionParams struct {
+type CreateSessionParams struct {
 	ID           uuid.UUID `json:"id"`
 	Username     string    `json:"username"`
 	RefreshToken string    `json:"refresh_token"`
@@ -36,8 +36,8 @@ type CreateSeesionParams struct {
 	ExpiresAt    time.Time `json:"expires_at"`
 }
 
-func (q *Queries) CreateSeesion(ctx context.Context, arg CreateSeesionParams) (Session, error) {
-	row := q.db.QueryRowContext(ctx, createSeesion,
+func (q *Queries) CreateSession(ctx context.Context, arg CreateSessionParams) (Session, error) {
+	row := q.db.QueryRowContext(ctx, createSession,
 		arg.ID,
 		arg.Username,
 		arg.RefreshToken,

@@ -12,7 +12,6 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/lib/pq"
 	mockdb "github.com/osisupermoses/simplebank/db/mock"
 	db "github.com/osisupermoses/simplebank/db/sqlc"
 	"github.com/osisupermoses/simplebank/util"
@@ -25,15 +24,17 @@ type eqCreateUserParamsMatcher struct {
 	password string
 }
 
-func (e eqCreateUserParamsMatcher) Matches(x any) bool {
+func (e eqCreateUserParamsMatcher) Matches(x interface{}) bool {
 	arg, ok := x.(db.CreateUserParams)
 	if !ok {
 		return false
 	}
+
 	err := util.CheckPassword(e.password, arg.HashedPassword)
 	if err != nil {
 		return false
 	}
+
 	e.arg.HashedPassword = arg.HashedPassword
 	return reflect.DeepEqual(e.arg, arg)
 }
@@ -53,10 +54,10 @@ func TestCreateUserAPI(t *testing.T) {
 		name          string
 		body          gin.H
 		buildStubs    func(store *mockdb.MockStore)
-		checkResponse func(recorder *httptest.ResponseRecorder)
+		checkResponse func(recoder *httptest.ResponseRecorder)
 	}{
 		{
-			name: "0K",
+			name: "OK",
 			body: gin.H{
 				"username":  user.Username,
 				"password":  password,
@@ -109,7 +110,7 @@ func TestCreateUserAPI(t *testing.T) {
 				store.EXPECT().
 					CreateUser(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(db.User{}, &pq.Error{Code: "23505"})
+					Return(db.User{}, db.ErrUniqueViolation)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusForbidden, recorder.Code)
@@ -186,7 +187,7 @@ func TestCreateUserAPI(t *testing.T) {
 			require.NoError(t, err)
 
 			url := "/users"
-			request, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(data))
+			request, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(data))
 			require.NoError(t, err)
 
 			server.router.ServeHTTP(recorder, request)
@@ -216,7 +217,7 @@ func TestLoginUserAPI(t *testing.T) {
 					Times(1).
 					Return(user, nil)
 				store.EXPECT().
-					CreateSeesion(gomock.Any(), gomock.Any()).
+					CreateSession(gomock.Any(), gomock.Any()).
 					Times(1)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
@@ -233,7 +234,7 @@ func TestLoginUserAPI(t *testing.T) {
 				store.EXPECT().
 					GetUser(gomock.Any(), gomock.Any()).
 					Times(1).
-					Return(db.User{}, sql.ErrNoRows)
+					Return(db.User{}, db.ErrRecordNotFound)
 			},
 			checkResponse: func(recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusNotFound, recorder.Code)
