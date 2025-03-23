@@ -19,6 +19,7 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
+
 type eqCreateUserParamsMatcher struct {
 	arg      db.CreateUserParams
 	password string

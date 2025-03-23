@@ -46,7 +46,7 @@ func (processor *RedisTaskProcessor) ProcessTaskSendVerifyEmail(ctx context.Cont
 	user, err := processor.store.GetUser(ctx, payload.Username)
 	if err != nil {
 		// only use when you intended to not to retry an error caused by entry not found in the db
-		// if err == sql.ErrNoRows {
+		// if errors.Is(err, db.ErrRecordNotFound) {
 		// 	return fmt.Errorf("user doesn't exist: %w", asynq.SkipRetry)
 		// }
 		return fmt.Errorf("failed to get user: %w", err)
@@ -54,8 +54,8 @@ func (processor *RedisTaskProcessor) ProcessTaskSendVerifyEmail(ctx context.Cont
 
 	// send email to user
 	verifyEmail, err := processor.store.CreateVerifyEmail(ctx, db.CreateVerifyEmailParams{
-		Username: user.Username,
-		Email: user.Email,
+		Username:   user.Username,
+		Email:      user.Email,
 		SecretCode: util.RandomString(32),
 	})
 	if err != nil {
@@ -63,7 +63,7 @@ func (processor *RedisTaskProcessor) ProcessTaskSendVerifyEmail(ctx context.Cont
 	}
 
 	subject := "Welcome to Simple Bank"
-	verifyUrl := fmt.Sprintf("http://localhost:8080/v1/verify_email?email_id=%d&secret_code=%s", 
+	verifyUrl := fmt.Sprintf("http://localhost:8080/v1/verify_email?email_id=%d&secret_code=%s",
 		verifyEmail.ID, verifyEmail.SecretCode)
 	content := fmt.Sprintf(`Hello %s,<br/>
 	Thank you for registering with us!<br/>
